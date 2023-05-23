@@ -8,12 +8,12 @@ public class MongoDbContext<T> where T : class
 {
     public readonly IMongoCollection<T> _collection;
 
-    public MongoDbContext(IOptions<MongoDBSettings> mongoDbSettings, string collection)
+    public MongoDbContext(IOptions<MongoDBSettings> mongoDbSettings)
     {
-        Type type = typeof(T);
+        string collectionName = typeof(T).Name.ToLower();
 
         MongoClient client = new MongoClient(mongoDbSettings.Value.ConnectionURI);
         IMongoDatabase database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
-         _collection = database.GetCollection<T>(nameof(T));
+         _collection = database.GetCollection<T>(collectionName);
     }
 }

@@ -7,14 +7,15 @@ public abstract class User
 {
     public User()
     {
-        Id = Guid.NewGuid().ToString();
         Appointments = new HashSet<Appointment>();
         Schedule = new HashSet<DateTime>();
     }
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    [BsonElement("id")]
+    public string? Id { get; set; }
+    [BsonElement("name")]
     public string Name { get; set; }
     public IEnumerable<Appointment> Appointments { get; set; }
     public IEnumerable<DateTime> Schedule { get; set; }

@@ -5,4 +5,6 @@ namespace Appointments.Services;
 public interface IClientService
 {
     public Client Get(string id);
+    public Task CreateAsync();
+
 }

@@ -1,5 +1,4 @@
 ﻿using Appointments.Data;
-using Appointments.Models;
 using Appointments.Models.Users;
 using MongoDB.Driver;
 
@@ -16,12 +15,25 @@ public class ClientService : IClientService
         _logger = logger;
     }
 
-    public Client Get(string id)
+    public  Client Get(string id)
     {
-        var filter = Builders<Client>.Filter.Eq("Id", id);
-
         _logger.LogInformation($"Fetch appointment with id: {id}");
 
-        return _context._collection.Find(filter).FirstOrDefault();
+        return _context._collection.Find(client => client.Id == id)
+            .FirstOrDefault();
+    }
+
+    public async Task CreateAsync()
+    {
+
+        var client = new Client
+        {
+            Name = "Mee",
+        };
+
+       await _context._collection.InsertOneAsync(client);
+
+        _logger.LogInformation($"Inserting appointment with id: {client.Id}");
+
     }
 }

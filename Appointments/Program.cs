@@ -1,6 +1,5 @@
 using Appointments.Data;
 using Appointments.Data.Micro.Data;
-using Appointments.Models.Users;
 using Appointments.Services;
 
 namespace Appointments
@@ -31,7 +30,7 @@ namespace Appointments
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            };
+            }
 
             app.UseHttpsRedirection();
 
@@ -59,7 +58,7 @@ namespace Appointments
 
             services.AddScoped(typeof(MongoDbContext<>));
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             services.AddRouting(opt => opt.LowercaseUrls = true);
 

@@ -18,8 +18,16 @@ namespace Appointments.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery] string id)
         {
-            var user = _clientService.Get(id);
-            return Ok(user);
+            _clientService.Get(id);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create()
+        {
+            await _clientService.CreateAsync();
+
+            return Ok();
         }
     }
 }
