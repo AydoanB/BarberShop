@@ -5,18 +5,16 @@ namespace Appointments.Models.Users;
 
 public abstract class User
 {
-    public User()
+    protected User()
     {
         Appointments = new HashSet<Appointment>();
         Schedule = new HashSet<DateTime>();
     }
 
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    [BsonElement("id")]
-    public string? Id { get; set; }
-    [BsonElement("name")]
+    public ObjectId Id { get; set; }
     public string Name { get; set; }
+    public string PhoneNumber { get; set; }
     public IEnumerable<Appointment> Appointments { get; set; }
     public IEnumerable<DateTime> Schedule { get; set; }
 

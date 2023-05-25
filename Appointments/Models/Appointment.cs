@@ -9,13 +9,12 @@ public class Appointment
 {
     public Appointment()
     {
-        Id = Guid.NewGuid().ToString();
         BarberServices = new HashSet<BarberServices>();
     }
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public ObjectId Id { get; set; }
     public Barber Barber { get; set; }
     public Client Client { get; set; }
     public DateTime ExactDate { get; set; }
