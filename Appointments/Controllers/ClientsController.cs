@@ -1,5 +1,5 @@
-﻿using Appointments.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Appointments.Models.DTOs;
+using Appointments.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Appointments.Controllers
@@ -16,18 +16,32 @@ namespace Appointments.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] string id)
+        [Route("{id}")]
+        public IActionResult Get(string id)
         {
-            _clientService.Get(id);
-            return Ok();
+            var client = _clientService.Get(id);
+            return Ok(client);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(NewClientDto client)
         {
-            await _clientService.CreateAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var id = await _clientService.CreateAsync(client);
 
-            return Ok();
+            return CreatedAtAction(nameof(Get), new { id = id}, client);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _clientService.DeleteAsync(id);
+
+            return NoContent();
         }
     }
 }
