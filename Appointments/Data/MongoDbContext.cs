@@ -14,6 +14,6 @@ public class MongoDbContext<T> where T : class
 
         MongoClient client = new MongoClient(mongoDbSettings.Value.ConnectionURI);
         IMongoDatabase database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
-         _collection = database.GetCollection<T>(collectionName);
+        _collection = database.GetCollection<T>(collectionName);
     }
 }

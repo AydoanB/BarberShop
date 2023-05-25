@@ -1,5 +1,7 @@
 ﻿using Appointments.Data;
+using Appointments.Models.DTOs;
 using Appointments.Models.Users;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Appointments.Services;
@@ -15,25 +17,36 @@ public class ClientService : IClientService
         _logger = logger;
     }
 
-    public  Client Get(string id)
+    public Client Get(string id)
     {
-        _logger.LogInformation($"Fetch appointment with id: {id}");
+        _logger.LogInformation($"Fetching appointment with id: {id}");
 
-        return _context._collection.Find(client => client.Id == id)
+        return _context._collection
+            .Find(client => client.Id == ObjectId.Parse(id))
             .FirstOrDefault();
     }
 
-    public async Task CreateAsync()
+    public async Task<string> CreateAsync(NewClientDto clientFromApi)
     {
-
-        var client = new Client
+        var newClient = new Client
         {
-            Name = "Mee",
+            Name = clientFromApi.Name,
+            PhoneNumber = clientFromApi.PhoneNumber,
+            Preferences = clientFromApi.Preferences,
         };
 
-       await _context._collection.InsertOneAsync(client);
+        await _context._collection
+            .InsertOneAsync(newClient);
 
-        _logger.LogInformation($"Inserting appointment with id: {client.Id}");
+       _logger.LogInformation($"Inserting appointment: {newClient.ToJson()}");
 
+       return newClient.Id.ToString();
+    }
+
+    public async Task DeleteAsync(string id)
+    {
+        var a= await _context._collection.DeleteOneAsync(client => client.Id == ObjectId.Parse(id));
+
+        _logger.LogInformation($"Deleted client: {a.ToJson()}");
     }
 }
