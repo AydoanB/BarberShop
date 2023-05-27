@@ -1,5 +1,6 @@
-﻿using Appointments.Models.DTOs;
+﻿using Appointments.Models;
 using Appointments.Services;
+using BarberShop.Appointments.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Appointments.Controllers
@@ -24,15 +25,15 @@ namespace Appointments.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(NewClientDto client)
+        public async Task<IActionResult> Create(NewClientDto input)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var id = await _clientService.CreateAsync(client);
+            var id = await _clientService.CreateAsync(input);
 
-            return CreatedAtAction(nameof(Get), new { id = id}, client);
+            return CreatedAtAction(nameof(Get), new { id = id}, input);
         }
 
         [HttpDelete]

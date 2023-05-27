@@ -1,6 +1,6 @@
 ﻿using Appointments.Data;
-using Appointments.Models.DTOs;
 using Appointments.Models.Users;
+using BarberShop.Appointments.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -26,13 +26,13 @@ public class ClientService : IClientService
             .FirstOrDefault();
     }
 
-    public async Task<string> CreateAsync(NewClientDto clientFromApi)
+    public async Task<string> CreateAsync(NewClientDto input)
     {
         var newClient = new Client
         {
-            Name = clientFromApi.Name,
-            PhoneNumber = clientFromApi.PhoneNumber,
-            Preferences = clientFromApi.Preferences,
+            Name = input.Name,
+            PhoneNumber = input.PhoneNumber,
+            Preferences = input.Preferences,
         };
 
         await _context._collection

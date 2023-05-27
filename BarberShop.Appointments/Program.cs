@@ -1,6 +1,7 @@
 using Appointments.Data;
 using Appointments.Data.Micro.Data;
 using Appointments.Services;
+using BarberShop.Appointments.Services;
 
 namespace Appointments
 {

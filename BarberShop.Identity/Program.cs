@@ -1,4 +1,5 @@
 using BarberShop.Identity.Data;
+using BarberShop.Identity.Infrastructure;
 using BarberShop.Identity.Services;
 using BarberShop.Infrastructure;
 

@@ -1,12 +1,13 @@
 ﻿using BarberShop.Identity.Data.Models;
+using BarberShop.Services;
 
 namespace BarberShop.Identity.Services;
 
 public interface IIdentityService
 {
-    Task<User> Register(UserInputModel userInput);
+    Task<Result<User>> Register(UserInputModel userInput);
 
-    Task<UserOutputModel> Login(UserInputModel userInput);
+    Task<Result<UserOutputModel>> Login(UserInputModel userInput);
 
-    Task ChangePassword(string userId, ChangePasswordInputModel changePasswordInput);
+    Task<Result> ChangePassword(string userId, ChangePasswordInputModel changePasswordInput);
 }

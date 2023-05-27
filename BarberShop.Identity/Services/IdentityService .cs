@@ -1,4 +1,5 @@
 ﻿using BarberShop.Identity.Data.Models;
+using BarberShop.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace BarberShop.Identity.Services;
