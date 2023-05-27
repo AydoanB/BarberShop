@@ -16,7 +16,8 @@ namespace Appointments.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] string id)
+        [Route("{id}")]
+        public IActionResult Get(string id)
         {
             var appointment = _appointmentService.Get(id);
 
@@ -24,7 +25,8 @@ namespace Appointments.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromQuery] string id)
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
             await _appointmentService.DeleteAsync(id);
 
