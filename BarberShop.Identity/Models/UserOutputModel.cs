@@ -1,4 +1,4 @@
-﻿namespace BarberShop.Identity.Data.Models;
+﻿namespace BarberShop.Identity.Models;
 
 public class UserOutputModel
 {

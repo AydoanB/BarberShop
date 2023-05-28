@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BarberShop.Identity.Data.Models;
+namespace BarberShop.Identity.Models;
 
 public class UserInputModel
 {
