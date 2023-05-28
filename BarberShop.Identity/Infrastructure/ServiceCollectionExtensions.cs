@@ -3,7 +3,6 @@ using BarberShop.Identity.Data.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace BarberShop.Identity.Infrastructure;
-
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddUserStorage(
