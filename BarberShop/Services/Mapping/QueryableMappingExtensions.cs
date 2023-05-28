@@ -1,7 +1,7 @@
-﻿using AutoMapper.QueryableExtensions;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using AutoMapper.QueryableExtensions;
 
-namespace Appointments.Services.Mapping;
+namespace BarberShop.Services.Mapping;
 
 public static class QueryableMappingExtensions
 {

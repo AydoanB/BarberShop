@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Appointments.Services.Mapping;
+namespace BarberShop.Services.Mapping;
 
 public interface IHaveCustomMappings
 {
