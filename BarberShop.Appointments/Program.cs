@@ -1,9 +1,9 @@
-using Appointments.Data;
-using Appointments.Data.Micro.Data;
-using Appointments.Services;
+using BarberShop.Appointments.Data;
+using BarberShop.Appointments.Data.Micro.Data;
 using BarberShop.Appointments.Services;
+using BarberShop.Infrastructure;
 
-namespace Appointments
+namespace BarberShop.Appointments
 {
     public class Program
     {
@@ -11,50 +11,34 @@ namespace Appointments
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             ConfigureServices(builder.Services, builder.Configuration);
-
-            builder.Services.AddEndpointsApiExplorer();
-
-            builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-            app.MapControllers();
-
-            //app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            app
+                .UseHttpsRedirection()
+                .UseRouting()
+                .UseCors(options => options
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod())
+                .UseAuthentication()
+                .UseAuthorization()
+                .UseEndpoints(endpoints => endpoints
+                    .MapControllers());
 
             app.Run();
         }
 
         private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            /*services.AddDbContext<ApplicationDbContext>(
-               options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));*/
-            /*services.Configure<CookiePolicyOptions>(
-                options =>
-                {
-                    options.CheckConsentNeeded = context => true;
-                    options.MinimumSameSitePolicy = SameSiteMode.None;
-                });*/
-
             services.Configure<MongoDBSettings>(configuration.GetSection("MongoDb"));
 
             services.AddScoped(typeof(MongoDbContext<>));
@@ -67,11 +51,17 @@ namespace Appointments
 
             services.AddSwaggerGen();
 
+            services.AddWebService(configuration);
+
+            services.AddEndpointsApiExplorer();
+
+            services.AddSwaggerGen();
+
             services.AddSingleton(configuration);
 
-            // Application services
-            services.AddScoped<IAppointmentService, AppointmentService>();
-            services.AddScoped<IClientService, ClientService>();
+            services
+                .AddScoped<IAppointmentService, AppointmentService>()
+                .AddScoped<IClientService, ClientService>();
         }
     }
 }
