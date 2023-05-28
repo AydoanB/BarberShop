@@ -9,23 +9,23 @@ namespace BarberShop.Identity.Services;
 
 public class TokenGeneratorService : ITokenGeneratorService
 {
-    private readonly ApplicationSettings applicationSettings;
+    private readonly ApplicationSettings _applicationSettings;
 
     public TokenGeneratorService(IOptions<ApplicationSettings> applicationSettings)
-        => this.applicationSettings = applicationSettings.Value;
+        => this._applicationSettings = applicationSettings.Value;
 
     public string GenerateToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(this.applicationSettings.Secret);
+        var key = Encoding.ASCII.GetBytes(this._applicationSettings.Secret);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
             {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Name, user.Email)
-                }),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.Email)
+            }),
             Expires = DateTime.UtcNow.AddDays(7),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),

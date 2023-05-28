@@ -1,20 +1,21 @@
 ﻿using BarberShop.Identity.Data.Models;
+using BarberShop.Identity.Models;
 using BarberShop.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace BarberShop.Identity.Services;
 
-public class IdentityService: IIdentityService
+public class IdentityService : IIdentityService
 {
     private const string InvalidErrorMessage = "Invalid credentials.";
 
-    private readonly UserManager<User> userManager;
-    private readonly ITokenGeneratorService jwtTokenGenerator;
+    private readonly UserManager<User> _userManager;
+    private readonly ITokenGeneratorService _jwtTokenGenerator;
 
     public IdentityService(UserManager<User> userManager, ITokenGeneratorService jwtTokenGenerator)
     {
-        this.userManager = userManager;
-        this.jwtTokenGenerator = jwtTokenGenerator;
+        this._userManager = userManager;
+        this._jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public async Task<Result<User>> Register(UserInputModel userInput)
@@ -25,7 +26,7 @@ public class IdentityService: IIdentityService
             UserName = userInput.Email
         };
 
-        var identityResult = await this.userManager.CreateAsync(user, userInput.Password);
+        var identityResult = await this._userManager.CreateAsync(user, userInput.Password);
 
         var errors = identityResult.Errors.Select(e => e.Description);
 
@@ -36,19 +37,19 @@ public class IdentityService: IIdentityService
 
     public async Task<Result<UserOutputModel>> Login(UserInputModel userInput)
     {
-        var user = await this.userManager.FindByEmailAsync(userInput.Email);
+        var user = await this._userManager.FindByEmailAsync(userInput.Email);
         if (user == null)
         {
             return InvalidErrorMessage;
         }
 
-        var passwordValid = await this.userManager.CheckPasswordAsync(user, userInput.Password);
+        var passwordValid = await this._userManager.CheckPasswordAsync(user, userInput.Password);
         if (!passwordValid)
         {
             return InvalidErrorMessage;
         }
 
-        var token = this.jwtTokenGenerator.GenerateToken(user);
+        var token = this._jwtTokenGenerator.GenerateToken(user);
 
         return new UserOutputModel(token);
     }
@@ -57,13 +58,13 @@ public class IdentityService: IIdentityService
         string userId,
         ChangePasswordInputModel changePasswordInput)
     {
-        var user = await this.userManager.FindByIdAsync(userId);
+        var user = await this._userManager.FindByIdAsync(userId);
         if (user == null)
         {
             return InvalidErrorMessage;
         }
 
-        var identityResult = await this.userManager.ChangePasswordAsync(
+        var identityResult = await this._userManager.ChangePasswordAsync(
             user,
             changePasswordInput.CurrentPassword,
             changePasswordInput.NewPassword);

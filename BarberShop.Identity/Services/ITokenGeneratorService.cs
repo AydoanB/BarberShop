@@ -1,8 +1,9 @@
 ﻿using BarberShop.Identity.Data.Models;
 
-namespace BarberShop.Identity.Services;
-
-public interface ITokenGeneratorService
+namespace BarberShop.Identity.Services
 {
-    string GenerateToken(User user);
+    public interface ITokenGeneratorService
+    {
+        string GenerateToken(User user);
+    }
 }
