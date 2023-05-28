@@ -1,8 +1,8 @@
-﻿using Appointments.Data.Micro.Data;
+﻿using BarberShop.Appointments.Data.Micro.Data;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace Appointments.Data;
+namespace BarberShop.Appointments.Data;
 
 public class MongoDbContext<T> where T : class
 {

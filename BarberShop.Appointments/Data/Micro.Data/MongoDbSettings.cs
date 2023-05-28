@@ -1,4 +1,4 @@
-﻿namespace Appointments.Data.Micro.Data;
+﻿namespace BarberShop.Appointments.Data.Micro.Data;
 
 public class MongoDBSettings
 {

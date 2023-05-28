@@ -1,9 +1,9 @@
-﻿using Appointments.Enums;
-using Appointments.Models.Users;
+﻿using BarberShop.Appointments.Enums;
+using BarberShop.Appointments.Models.Users;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Appointments.Models;
+namespace BarberShop.Appointments.Models;
 
 public class Appointment
 {

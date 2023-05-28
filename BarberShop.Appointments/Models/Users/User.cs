@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Appointments.Models.Users;
+namespace BarberShop.Appointments.Models.Users;
 
 public abstract class User
 {

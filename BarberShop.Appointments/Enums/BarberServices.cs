@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Appointments.Enums;
+namespace BarberShop.Appointments.Enums;
 
 public enum BarberServices
 {

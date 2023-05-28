@@ -1,4 +1,4 @@
-﻿namespace Appointments.Models.Users;
+﻿namespace BarberShop.Appointments.Models.Users;
 
 public class Client : User
 {

@@ -1,11 +1,13 @@
-﻿using Appointments.Models;
-using Appointments.Services;
+﻿using BarberShop.Appointments.Models;
+using BarberShop.Appointments.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Appointments.Controllers
+namespace BarberShop.Appointments.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AppointmentsController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
@@ -22,6 +24,14 @@ namespace Appointments.Controllers
             var appointment = _appointmentService.Get(id);
 
             return Ok(appointment);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var appointments = await _appointmentService.GetAllAsync();
+
+            return Ok(appointments);
         }
 
         [HttpDelete]

@@ -1,8 +1,8 @@
-﻿using Appointments.Data;
-using Appointments.Models;
+﻿using BarberShop.Appointments.Data;
+using BarberShop.Appointments.Models;
 using MongoDB.Driver;
 
-namespace Appointments.Services;
+namespace BarberShop.Appointments.Services;
 
 public class AppointmentService : IAppointmentService
 {
@@ -22,6 +22,15 @@ public class AppointmentService : IAppointmentService
         _logger.LogInformation($"Fetch appointment with id: {id}");
 
         return _context._collection.Find(filter).FirstOrDefault();
+    }
+
+    public async Task<IEnumerable<Appointment>> GetAllAsync()
+    {
+        var appointments =  await _context._collection.Find(_ => true).ToListAsync();
+
+        _logger.LogInformation($"Fetch all appointments {appointments.Count}");
+
+        return appointments;
     }
 
     public async Task CreateAsync(Appointment appointment)

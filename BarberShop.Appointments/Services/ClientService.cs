@@ -1,10 +1,9 @@
-﻿using Appointments.Data;
-using Appointments.Models.Users;
-using BarberShop.Appointments.Services;
+﻿using BarberShop.Appointments.Data;
+using BarberShop.Appointments.Models.Users;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Appointments.Services;
+namespace BarberShop.Appointments.Services;
 
 public class ClientService : IClientService
 {
@@ -24,6 +23,15 @@ public class ClientService : IClientService
         return _context._collection
             .Find(client => client.Id == ObjectId.Parse(id))
             .FirstOrDefault();
+    }
+
+    public async Task<IEnumerable<Client>> GetAllAsync()
+    {
+        var clients = await _context._collection.Find(_ => true).ToListAsync();
+
+        _logger.LogInformation($"Fetch all appointments {clients.Count}");
+
+        return clients;
     }
 
     public async Task<string> CreateAsync(NewClientDto input)
