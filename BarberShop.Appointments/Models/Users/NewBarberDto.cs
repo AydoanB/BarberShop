@@ -2,11 +2,9 @@
 
 namespace BarberShop.Appointments.Models.Users;
 
-public class Barber : User
+public class NewBarberDto : NewClientDto
 {
-    public Barber()
-    {
-        AvailableServices = new HashSet<BarberServices>();
-    }
+    //TODO add right props
+
     public IEnumerable<BarberServices> AvailableServices { get; set; }
 }

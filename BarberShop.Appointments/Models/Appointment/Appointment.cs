@@ -3,7 +3,7 @@ using BarberShop.Appointments.Models.Users;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace BarberShop.Appointments.Models;
+namespace BarberShop.Appointments.Models.Appointment;
 
 public class Appointment
 {

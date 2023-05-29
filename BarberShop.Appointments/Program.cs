@@ -61,7 +61,8 @@ namespace BarberShop.Appointments
 
             services
                 .AddScoped<IAppointmentService, AppointmentService>()
-                .AddScoped<IClientService, ClientService>();
+                .AddScoped<IClientService, ClientService>()
+                .AddScoped<IBarberService, BarberService>();
         }
     }
 }

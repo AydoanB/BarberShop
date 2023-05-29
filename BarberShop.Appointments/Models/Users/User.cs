@@ -15,6 +15,7 @@ public abstract class User
     public ObjectId Id { get; set; }
     public string Name { get; set; }
     public string PhoneNumber { get; set; }
+    public string UserId { get; set; }
     public IEnumerable<Appointment> Appointments { get; set; }
     public IEnumerable<DateTime> Schedule { get; set; }
 
