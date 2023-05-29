@@ -14,8 +14,8 @@ public class IdentityService : IIdentityService
 
     public IdentityService(UserManager<User> userManager, ITokenGeneratorService jwtTokenGenerator)
     {
-        this._userManager = userManager;
-        this._jwtTokenGenerator = jwtTokenGenerator;
+        _userManager = userManager;
+        _jwtTokenGenerator = jwtTokenGenerator;
     }
 
     public async Task<Result<User>> Register(UserInputModel userInput)
@@ -26,7 +26,7 @@ public class IdentityService : IIdentityService
             UserName = userInput.Email
         };
 
-        var identityResult = await this._userManager.CreateAsync(user, userInput.Password);
+        var identityResult = await _userManager.CreateAsync(user, userInput.Password);
 
         var errors = identityResult.Errors.Select(e => e.Description);
 
@@ -37,19 +37,19 @@ public class IdentityService : IIdentityService
 
     public async Task<Result<UserOutputModel>> Login(UserInputModel userInput)
     {
-        var user = await this._userManager.FindByEmailAsync(userInput.Email);
+        var user = await _userManager.FindByEmailAsync(userInput.Email);
         if (user == null)
         {
             return InvalidErrorMessage;
         }
 
-        var passwordValid = await this._userManager.CheckPasswordAsync(user, userInput.Password);
+        var passwordValid = await _userManager.CheckPasswordAsync(user, userInput.Password);
         if (!passwordValid)
         {
             return InvalidErrorMessage;
         }
 
-        var token = this._jwtTokenGenerator.GenerateToken(user);
+        var token = _jwtTokenGenerator.GenerateToken(user);
 
         return new UserOutputModel(token);
     }
@@ -58,13 +58,13 @@ public class IdentityService : IIdentityService
         string userId,
         ChangePasswordInputModel changePasswordInput)
     {
-        var user = await this._userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
             return InvalidErrorMessage;
         }
 
-        var identityResult = await this._userManager.ChangePasswordAsync(
+        var identityResult = await _userManager.ChangePasswordAsync(
             user,
             changePasswordInput.CurrentPassword,
             changePasswordInput.NewPassword);

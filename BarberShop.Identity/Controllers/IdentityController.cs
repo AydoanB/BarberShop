@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BarberShop.Identity.Controllers
 {
+    [ApiController]
     public class IdentityController : Controller
     {
         private readonly IIdentityService _identity;
@@ -15,15 +16,15 @@ namespace BarberShop.Identity.Controllers
             IIdentityService identity,
             ICurrentUserService currentUser)
         {
-            this._identity = identity;
-            this._currentUser = currentUser;
+            _identity = identity;
+            _currentUser = currentUser;
         }
 
         [HttpPost]
         [Route(nameof(Register))]
         public async Task<ActionResult<UserOutputModel>> Register(UserInputModel input)
         {
-            var result = await this._identity.Register(input);
+            var result = await _identity.Register(input);
 
             if (!result.Succeeded)
             {
@@ -37,7 +38,7 @@ namespace BarberShop.Identity.Controllers
         [Route(nameof(Login))]
         public async Task<ActionResult<UserOutputModel>> Login(UserInputModel input)
         {
-            var result = await this._identity.Login(input);
+            var result = await _identity.Login(input);
 
             if (!result.Succeeded)
             {
@@ -51,7 +52,7 @@ namespace BarberShop.Identity.Controllers
         [Authorize]
         [Route(nameof(ChangePassword))]
         public async Task<ActionResult> ChangePassword(ChangePasswordInputModel input)
-            => await this._identity.ChangePassword(this._currentUser.UserId, new ChangePasswordInputModel
+            => await _identity.ChangePassword(_currentUser.UserId, new ChangePasswordInputModel
             {
                 CurrentPassword = input.CurrentPassword,
                 NewPassword = input.NewPassword

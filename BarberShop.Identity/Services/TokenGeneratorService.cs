@@ -12,12 +12,12 @@ public class TokenGeneratorService : ITokenGeneratorService
     private readonly ApplicationSettings _applicationSettings;
 
     public TokenGeneratorService(IOptions<ApplicationSettings> applicationSettings)
-        => this._applicationSettings = applicationSettings.Value;
+        => _applicationSettings = applicationSettings.Value;
 
     public string GenerateToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(this._applicationSettings.Secret);
+        var key = Encoding.ASCII.GetBytes(_applicationSettings.Secret);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

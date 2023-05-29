@@ -40,7 +40,8 @@ namespace BarberShop.Identity
                 .UseAuthentication()
                 .UseAuthorization()
                 .UseEndpoints(endpoints => endpoints
-                    .MapControllers());
+                    .MapControllers())
+                .Initialize();
 
             app.Run();
         }
