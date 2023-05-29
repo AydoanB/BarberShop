@@ -1,4 +1,4 @@
-﻿using BarberShop.Appointments.Models;
+﻿using BarberShop.Appointments.Models.Appointment;
 using BarberShop.Appointments.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace BarberShop.Appointments.Controllers
         [Route("{id}")]
         public IActionResult Get(string id)
         {
-            var appointment = _appointmentService.Get(id);
+            var appointment = _appointmentService.GetAsync(id);
 
             return Ok(appointment);
         }
@@ -44,11 +44,11 @@ namespace BarberShop.Appointments.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] Appointment appointment)
+        public async Task<IActionResult> CreateAsync([FromBody] NewAppointmentDto appointment)
         {
             await _appointmentService.CreateAsync(appointment);
 
-            return CreatedAtAction(nameof(Get), new { id = appointment.Id });
+            return CreatedAtAction(nameof(Get), new { id = appointment });
         }
 
     }

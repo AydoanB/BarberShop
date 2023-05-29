@@ -1,27 +1,31 @@
 ﻿using BarberShop.Appointments.Models.Users;
 using BarberShop.Appointments.Services;
+using BarberShop.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 
 namespace BarberShop.Appointments.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize(Roles = "Admin")]
     public class ClientsController : ControllerBase
     {
         private readonly IClientService _clientService;
+        private readonly ICurrentUserService _currentUser;
 
-        public ClientsController(IClientService clientService)
+        public ClientsController(IClientService clientService, ICurrentUserService currentUser)
         {
             _clientService = clientService;
+            _currentUser = currentUser;
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult Get(string id)
         {
-            var client = _clientService.Get(id);
+            var client = _clientService.GetAsync(id);
             return Ok(client);
         }
 
@@ -40,9 +44,19 @@ namespace BarberShop.Appointments.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var id = await _clientService.CreateAsync(input);
 
-            return CreatedAtAction(nameof(Get), new { id = id}, input);
+            var userId = _currentUser.UserId;
+
+            try
+            {
+                await _clientService.CreateAsync(input, userId);
+            }
+            catch (InvalidOperationException exc)
+            {
+                return BadRequest(exc.Message);
+            }
+
+            return CreatedAtAction(nameof(Get), new { userId = userId}, input);
         }
 
         [HttpDelete]

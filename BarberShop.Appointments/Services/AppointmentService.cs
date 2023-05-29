@@ -1,5 +1,6 @@
 ﻿using BarberShop.Appointments.Data;
-using BarberShop.Appointments.Models;
+using BarberShop.Appointments.Models.Appointment;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BarberShop.Appointments.Services;
@@ -8,20 +9,26 @@ public class AppointmentService : IAppointmentService
 {
     private readonly MongoDbContext<Appointment> _context;
     private readonly ILogger<AppointmentService> _logger;
+    private readonly IClientService _clientService;
+    private readonly IBarberService _barberService;
 
-    public AppointmentService(MongoDbContext<Appointment> context, ILogger<AppointmentService> logger)
+    public AppointmentService(
+        MongoDbContext<Appointment> context, 
+        ILogger<AppointmentService> logger, 
+        IClientService clientService, 
+        IBarberService barberService)
     {
         _context = context;
         _logger = logger;
+        _clientService = clientService;
+        _barberService = barberService;
     }
 
-    public Appointment Get(string id)
+    public async Task<Appointment> GetAsync(string id)
     {
-        var filter = Builders<Appointment>.Filter.Eq("Id", id);
-
         _logger.LogInformation($"Fetch appointment with id: {id}");
 
-        return _context._collection.Find(filter).FirstOrDefault();
+        return await _context._collection.Find(appointment => appointment.Id == ObjectId.Parse(id)).FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<Appointment>> GetAllAsync()
@@ -33,12 +40,15 @@ public class AppointmentService : IAppointmentService
         return appointments;
     }
 
-    public async Task CreateAsync(Appointment appointment)
+    public async Task CreateAsync(NewAppointmentDto appointment)
     {
-        var createdAppointment = new Appointment
+        var client = await _clientService.GetAsync(appointment.ClientId);
+        var barber = await _barberService.GetAsync(appointment.BarberId);
+
+        var createdAppointment = new Appointment()
         {
-            Barber = appointment.Barber,
-            Client = appointment.Client,
+            Client = client,
+            Barber = barber,
             ExactDate = appointment.ExactDate,
             BarberServices = appointment.BarberServices
         };
@@ -50,10 +60,8 @@ public class AppointmentService : IAppointmentService
 
     public async Task DeleteAsync(string id)
     {
-        var filter = Builders<Appointment>.Filter.Eq("Id", id);
+        await _context._collection.DeleteOneAsync(appointment => appointment.Id == ObjectId.Parse(id));
 
-        _logger.LogInformation($"Appointment with id: {id} was deleted");
-
-        await _context._collection.DeleteOneAsync(filter);
+        _logger.LogInformation($"Appointment with id: {id} was deleted successfully");
     }
 }

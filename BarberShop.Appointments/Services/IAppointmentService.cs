@@ -1,11 +1,11 @@
-﻿using BarberShop.Appointments.Models;
+﻿using BarberShop.Appointments.Models.Appointment;
 
 namespace BarberShop.Appointments.Services;
 
 public interface IAppointmentService
 {
-    public Appointment Get(string id);
+    public Task<Appointment> GetAsync(string id);
     public Task<IEnumerable<Appointment>> GetAllAsync();
     public Task DeleteAsync(string id);
-    public Task CreateAsync(Appointment appointment);
+    public Task CreateAsync(NewAppointmentDto appointment);
 }

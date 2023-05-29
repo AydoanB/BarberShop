@@ -10,51 +10,61 @@ public class ClientService : IClientService
     private readonly MongoDbContext<Client> _context;
     private readonly ILogger<ClientService> _logger;
 
-    public ClientService(MongoDbContext<Client> context, ILogger<ClientService> logger)
+    public ClientService(
+        MongoDbContext<Client> context, 
+        ILogger<ClientService> logger)
     {
         _context = context;
         _logger = logger;
     }
 
-    public Client Get(string id)
+    public async Task<Client> GetAsync(string userId)
     {
-        _logger.LogInformation($"Fetching appointment with id: {id}");
+        var client = await _context._collection
+            .Find(client => client.UserId == userId)
+            .FirstOrDefaultAsync();
 
-        return _context._collection
-            .Find(client => client.Id == ObjectId.Parse(id))
-            .FirstOrDefault();
+        _logger.LogInformation($"Found client: {client.ToJson()}");
+
+        return client;
     }
 
     public async Task<IEnumerable<Client>> GetAllAsync()
     {
         var clients = await _context._collection.Find(_ => true).ToListAsync();
 
-        _logger.LogInformation($"Fetch all appointments {clients.Count}");
+        _logger.LogInformation($"Fetch all client {clients.Count}");
 
         return clients;
     }
 
-    public async Task<string> CreateAsync(NewClientDto input)
+    public async Task CreateAsync(NewClientDto input, string currentUserId)
     {
+        if (UserExists(currentUserId))
+        {
+            throw new InvalidOperationException("Client already exists");
+        }
+
         var newClient = new Client
         {
             Name = input.Name,
             PhoneNumber = input.PhoneNumber,
             Preferences = input.Preferences,
+            UserId = currentUserId
         };
 
         await _context._collection
             .InsertOneAsync(newClient);
 
-       _logger.LogInformation($"Inserting appointment: {newClient.ToJson()}");
-
-       return newClient.Id.ToString();
+        _logger.LogInformation($"Inserting client: {newClient.ToJson()}");
     }
 
-    public async Task DeleteAsync(string id)
+    public async Task DeleteAsync(string userId)
     {
-        var a= await _context._collection.DeleteOneAsync(client => client.Id == ObjectId.Parse(id));
+        var client = await _context._collection.DeleteOneAsync(client => client.UserId == userId);
 
-        _logger.LogInformation($"Deleted client: {a.ToJson()}");
+        _logger.LogInformation($"Deleted client: {client.ToJson()}");
     }
+
+    private bool UserExists(string userId) => _context._collection.Find(user => user.UserId == userId).Any();
 }
