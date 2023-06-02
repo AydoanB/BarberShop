@@ -39,7 +39,7 @@ namespace BarberShop.Appointments
 
         private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<MongoDBSettings>(configuration.GetSection("MongoDb"));
+            services.Configure<MongoDBSettings>(configuration.GetSection(nameof(MongoDBSettings)));
 
             services.AddScoped(typeof(MongoDbContext<>));
 
