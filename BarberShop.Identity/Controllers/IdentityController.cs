@@ -1,7 +1,8 @@
 ﻿using BarberShop.Identity.Models;
 using BarberShop.Identity.Services;
+using BarberShop.Messages;
 using BarberShop.Services;
-using Microsoft.AspNetCore.Authorization;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberShop.Identity.Controllers
@@ -11,13 +12,16 @@ namespace BarberShop.Identity.Controllers
     {
         private readonly IIdentityService _identity;
         private readonly ICurrentUserService _currentUser;
+        private readonly IBus _publisher;
 
         public IdentityController(
             IIdentityService identity,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser, 
+            IBus publisher)
         {
             _identity = identity;
             _currentUser = currentUser;
+            _publisher = publisher;
         }
 
         [HttpPost]
@@ -45,11 +49,16 @@ namespace BarberShop.Identity.Controllers
                 return BadRequest(result.Errors);
             }
 
+            await _publisher.Publish(new BarberCreatedMessage
+            {
+                Name = input.FullName,
+                Token = result.Data.Token,
+            });
+
             return new UserOutputModel(result.Data.Token);
         }
 
         [HttpPut]
-        [Authorize]
         [Route(nameof(ChangePassword))]
         public async Task<ActionResult> ChangePassword(ChangePasswordInputModel input)
             => await _identity.ChangePassword(_currentUser.UserId, new ChangePasswordInputModel

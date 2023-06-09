@@ -19,7 +19,8 @@ namespace BarberShop.Identity
                 .AddUserStorage()
                 .AddRouting(opt => opt.LowercaseUrls = true)
                 .AddTransient<IIdentityService, IdentityService>()
-                .AddTransient<ITokenGeneratorService, TokenGeneratorService>();
+                .AddTransient<ITokenGeneratorService, TokenGeneratorService>()
+                .AddMessaging();
 
             var app = builder.Build();
 
@@ -31,16 +32,7 @@ namespace BarberShop.Identity
             }
 
             app
-                .UseHttpsRedirection()
-                .UseRouting()
-                .UseCors(options => options
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod())
-                .UseAuthentication()
-                .UseAuthorization()
-                .UseEndpoints(endpoints => endpoints
-                    .MapControllers())
+                .UseWebService(builder.Environment)
                 .Initialize();
 
             app.Run();

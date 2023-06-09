@@ -1,7 +1,9 @@
 using BarberShop.Appointments.Data;
 using BarberShop.Appointments.Data.Micro.Data;
+using BarberShop.Appointments.Messages;
 using BarberShop.Appointments.Services;
 using BarberShop.Infrastructure;
+using BarberShop.Services;
 
 namespace BarberShop.Appointments
 {
@@ -23,16 +25,7 @@ namespace BarberShop.Appointments
             }
 
             app
-                .UseHttpsRedirection()
-                .UseRouting()
-                .UseCors(options => options
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod())
-                .UseAuthentication()
-                .UseAuthorization()
-                .UseEndpoints(endpoints => endpoints
-                    .MapControllers());
+                .UseWebService(builder.Environment);
 
             app.Run();
         }
@@ -43,9 +36,7 @@ namespace BarberShop.Appointments
 
             services.AddScoped(typeof(MongoDbContext<>));
 
-            services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null);
-
-            services.AddRouting(opt => opt.LowercaseUrls = true);
+            services.AddControllers();
 
             services.AddEndpointsApiExplorer();
 
@@ -55,14 +46,14 @@ namespace BarberShop.Appointments
 
             services.AddEndpointsApiExplorer();
 
-            services.AddSwaggerGen();
-
             services.AddSingleton(configuration);
 
             services
                 .AddScoped<IAppointmentService, AppointmentService>()
                 .AddScoped<IClientService, ClientService>()
-                .AddScoped<IBarberService, BarberService>();
+                .AddScoped<IBarberService, BarberService>()
+                .AddScoped<ICurrentTokenService, CurrentTokenService>()
+                .AddMessaging(typeof(UserBarberCreatedConsumer));
         }
     }
 }

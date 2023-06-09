@@ -51,10 +51,14 @@ public class BarberService : IBarberService
             AvailableServices = input.AvailableServices
         };
 
-        await _context._collection
-            .InsertOneAsync(newBarber);
+        await _context._collection.InsertOneAsync(newBarber);
 
         _logger.LogInformation($"Inserting client: {newBarber.ToJson()}");
+    }
+
+    public async Task<NewBarberDto> CreateUser(NewBarberDto consumer)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task DeleteAsync(string userId)
