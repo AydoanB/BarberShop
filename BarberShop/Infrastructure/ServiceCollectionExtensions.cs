@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,6 +17,7 @@ public static class ServiceCollectionExtensions
         where TDbContext : DbContext
     {
         services
+            .AddRouting(x => x.LowercaseUrls = true)
             .AddDatabase<TDbContext>(configuration)
             .AddApplicationSettings(configuration)
             .AddTokenAuthentication(configuration)
@@ -29,6 +31,7 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration)
     {
         services
+            .AddRouting(x => x.LowercaseUrls = true)
             .AddApplicationSettings(configuration)
             .AddTokenAuthentication(configuration)
             .AddControllers();
@@ -82,6 +85,29 @@ public static class ServiceCollectionExtensions
 
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+        return services;
+    }
+    public static IServiceCollection AddMessaging(
+        this IServiceCollection services,
+        params Type[] consumers)
+    {
+        services
+            .AddMassTransit(mt =>
+            {
+                consumers.ForEach(consumer => mt.AddConsumer(consumer));
+
+                mt.AddBus(bus => Bus.Factory.CreateUsingRabbitMq(rmq =>
+                {
+                    rmq.Host("localhost");
+
+                    consumers.ForEach(consumer => rmq.ReceiveEndpoint(consumer.FullName, endpoint =>
+                    {
+                        endpoint.ConfigureConsumer(bus, consumer);
+                    }));
+                }));
+            })
+            .AddMassTransitHostedService();
 
         return services;
     }

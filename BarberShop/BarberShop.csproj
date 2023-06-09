@@ -4,20 +4,26 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>5021c1e2-d114-4cb8-b4cc-9bca335c4693</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Infrastructure\" />
+    <Folder Include="Messages\" />
   </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
+		<PackageReference Include="MassTransit" Version="8.0.16" />
+		<PackageReference Include="MassTransit.ActiveMQ" Version="8.0.16" />
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.0.16" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.16" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.16">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.12" />
 	</ItemGroup>
 
