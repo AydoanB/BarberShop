@@ -1,6 +1,6 @@
 ﻿using BarberShop.Appointments.Enums;
 
-namespace BarberShop.Appointments.Models.Appointment;
+namespace BarberShop.Appointments.Models.Appointments;
 
 public class NewAppointmentDto
 {

@@ -1,4 +1,4 @@
-﻿using BarberShop.Appointments.Models.Appointment;
+﻿using BarberShop.Appointments.Models.Appointments;
 using BarberShop.Appointments.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

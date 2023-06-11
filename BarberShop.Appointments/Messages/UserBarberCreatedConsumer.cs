@@ -21,12 +21,12 @@ public class UserBarberCreatedConsumer : IConsumer<BarberCreatedMessage>
         var handler = new JwtSecurityTokenHandler();
         var token = handler.ReadJwtToken(jwt);
 
-        var userId = token.Claims.FirstOrDefault(claim => claim.Type == "nameid").Value;
+        var userId = token.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
 
         var barber = new NewBarberDto
         {
             Name = context.Message.Name,
-            UserId = userId
+            //UserId = userId
         };
 
         await _barberService.CreateUser(barber);
