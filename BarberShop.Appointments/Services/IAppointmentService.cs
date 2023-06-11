@@ -1,4 +1,4 @@
-﻿using BarberShop.Appointments.Models.Appointment;
+﻿using BarberShop.Appointments.Models.Appointments;
 
 namespace BarberShop.Appointments.Services;
 

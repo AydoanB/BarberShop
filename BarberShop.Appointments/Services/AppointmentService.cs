@@ -1,5 +1,5 @@
 ﻿using BarberShop.Appointments.Data;
-using BarberShop.Appointments.Models.Appointment;
+using BarberShop.Appointments.Models.Appointments;
 using MongoDB.Bson;
 using MongoDB.Driver;
 

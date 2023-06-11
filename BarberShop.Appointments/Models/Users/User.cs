@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson;
+﻿using BarberShop.Appointments.Models.Appointments;
+
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BarberShop.Appointments.Models.Users;

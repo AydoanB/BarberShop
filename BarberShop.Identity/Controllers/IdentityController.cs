@@ -49,11 +49,11 @@ namespace BarberShop.Identity.Controllers
                 return BadRequest(result.Errors);
             }
 
-            await _publisher.Publish(new BarberCreatedMessage
-            {
-                Name = input.FullName,
-                Token = result.Data.Token,
-            });
+            //await _publisher.Publish(new BarberCreatedMessage
+            //{
+            //    Name = input.FullName,
+            //    Token = result.Data.Token,
+            //});
 
             return new UserOutputModel(result.Data.Token);
         }

@@ -88,6 +88,7 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
     public static IServiceCollection AddMessaging(
         this IServiceCollection services,
         params Type[] consumers)
