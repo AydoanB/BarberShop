@@ -53,7 +53,7 @@ namespace BarberShop.Appointments
                 .AddScoped<IClientService, ClientService>()
                 .AddScoped<IBarberService, BarberService>()
                 .AddScoped<ICurrentTokenService, CurrentTokenService>()
-                .AddMessaging(typeof(UserBarberCreatedConsumer));
+                .AddMessaging(configuration, typeof(UserBarberCreatedConsumer));
         }
     }
 }

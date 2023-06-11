@@ -6,6 +6,7 @@ using System.Text;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
 
 namespace BarberShop.Infrastructure;
 
@@ -91,8 +92,18 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddMessaging(
         this IServiceCollection services,
+        IConfiguration configuration,
         params Type[] consumers)
     {
+
+        var rabbitmqUser = configuration
+            .GetSection(nameof(ApplicationSettings))
+            .GetValue<string>(nameof(ApplicationSettings.RabbitMqUser));
+
+        var rabbitmqPass = configuration
+            .GetSection(nameof(ApplicationSettings))
+            .GetValue<string>(nameof(ApplicationSettings.RabbitMqPass));
+
         services
             .AddMassTransit(mt =>
             {
@@ -100,7 +111,11 @@ public static class ServiceCollectionExtensions
 
                 mt.AddBus(bus => Bus.Factory.CreateUsingRabbitMq(rmq =>
                 {
-                    rmq.Host("localhost");
+                    rmq.Host("rabbitmq", host =>
+                    {
+                        host.Username(rabbitmqUser);
+                        host.Password(rabbitmqPass);
+                    });
 
                     consumers.ForEach(consumer => rmq.ReceiveEndpoint(consumer.FullName, endpoint =>
                     {
