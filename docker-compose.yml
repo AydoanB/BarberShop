@@ -1,0 +1,70 @@
+﻿version: "3.8"
+
+services:
+  data:
+    container_name: azuresql
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    ports:
+      - "1433:1433"
+    environment:
+      - "ACCEPT_EULA=1"
+      - "MSSQL_SA_PASSWORD=(localdb)"
+    hostname: mssql
+    volumes:
+      - mssql-azure-edge-data:/var/opt/mssql
+    networks:
+      - barbershop-network
+         
+  messages:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    hostname: "rabbitmq"
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=Rand0mR4bbitMqCo0k1e
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
+    networks:
+      - barbershop-network
+        
+  identity:
+    container_name: identity
+    build:
+      context: ../BarberShop
+      dockerfile: ./BarberShop.Identity/Dockerfile
+    ports:
+      - "7294:80"
+    env_file: BarberShop/Common.env
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=azuresql;Database=BarberShopIdentity;User Id=sa;Password=(localdb);Integrated Security=false;TrustServerCertificate=true
+    restart: on-failure
+    volumes:
+      - ./.aspnet/identity/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+    networks:
+      - barbershop-network
+    depends_on:
+      - data
+    
+  appointments:
+     container_name: appointments
+     build:
+       context: ../BarberShop
+       dockerfile: ./BarberShop.Appointments/Dockerfile
+     ports:
+       - "7291:80"
+     env_file: BarberShop/Common.env
+     environment:
+       - MongoDBSettings__ConnectionURI=mongodb+srv://barbershop:mybarbershop12@barbershop.al7hh3e.mongodb.net/?retryWrites=true&w=majority
+       - MongoDBSettings__DatabaseName=appointments
+     restart: on-failure
+     volumes:
+       - ./.aspnet/identity/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+     networks:
+       - barbershop-network
+networks:
+    barbershop-network:
+volumes:
+    mssql-azure-edge-data:
+    mongodb:
