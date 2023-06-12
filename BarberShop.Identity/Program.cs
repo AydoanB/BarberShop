@@ -2,6 +2,7 @@ using BarberShop.Identity.Data;
 using BarberShop.Identity.Infrastructure;
 using BarberShop.Identity.Services;
 using BarberShop.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarberShop.Identity
 {
@@ -32,8 +33,12 @@ namespace BarberShop.Identity
             }
 
             app
-                .UseWebService(builder.Environment)
-                .Initialize();
+                .UseWebService(builder.Environment);
+
+            var scope = app.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+
+            context.Database.Migrate();
 
             app.Run();
         }

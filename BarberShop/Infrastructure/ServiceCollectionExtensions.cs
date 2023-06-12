@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
     public static IServiceCollection AddDatabase<TDbContext>(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -100,7 +101,11 @@ public static class ServiceCollectionExtensions
 
                 mt.AddBus(bus => Bus.Factory.CreateUsingRabbitMq(rmq =>
                 {
-                    rmq.Host("localhost");
+                    rmq.Host("rabbitmq", host =>
+                    {
+                        host.Username("rabbitmq");
+                        host.Password("rabbitmq");
+                    });
 
                     consumers.ForEach(consumer => rmq.ReceiveEndpoint(consumer.FullName, endpoint =>
                     {
