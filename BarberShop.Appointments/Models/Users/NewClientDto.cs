@@ -1,8 +1,6 @@
 ﻿namespace BarberShop.Appointments.Models.Users;
 
-public class NewClientDto
+public class NewClientDto : User
 {
-    public string Name { get; set; }
-    public string PhoneNumber { get; set; }
     public string Preferences { get; set; }
 }

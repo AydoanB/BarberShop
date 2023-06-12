@@ -1,6 +1,8 @@
 ﻿using BarberShop.Identity.Data.Models;
 using BarberShop.Identity.Models;
+using BarberShop.Messages;
 using BarberShop.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 
 namespace BarberShop.Identity.Services;
@@ -11,11 +13,16 @@ public class IdentityService : IIdentityService
 
     private readonly UserManager<User> _userManager;
     private readonly ITokenGeneratorService _jwtTokenGenerator;
+    private readonly IBus _publisher;
 
-    public IdentityService(UserManager<User> userManager, ITokenGeneratorService jwtTokenGenerator)
+    public IdentityService(
+        UserManager<User> userManager,
+        ITokenGeneratorService jwtTokenGenerator,
+        IBus publisher)
     {
         _userManager = userManager;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _publisher = publisher;
     }
 
     public async Task<Result<User>> Register(UserInputModel userInput)
@@ -29,6 +36,14 @@ public class IdentityService : IIdentityService
         var identityResult = await _userManager.CreateAsync(user, userInput.Password);
 
         var errors = identityResult.Errors.Select(e => e.Description);
+
+        if (!errors.Any() && userInput.IsBarber)
+        {
+            await _publisher.Publish(new BarberCreatedMessage()
+            {
+                Name = userInput.FullName
+            });
+        }
 
         return identityResult.Succeeded
             ? Result<User>.SuccessWith(user)
