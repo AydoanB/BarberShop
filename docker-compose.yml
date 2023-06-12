@@ -22,7 +22,6 @@ services:
       - "15672:15672"
       - "5672:5672"
     hostname: "rabbitmq"
-    env_file: .env
     environment:
       - RABBITMQ_ERLANG_COOKIE=Rand0mR4bbitMqCo0k1e
       - RABBITMQ_DEFAULT_USER=${ApplicationSettings__RabbitMqUser}
@@ -39,7 +38,7 @@ services:
       - "7294:80"
     env_file: .env 
     environment:
-      - ConnectionStrings__DefaultConnection=${ConnectionStringSQL}
+      - ConnectionStrings__DefaultConnection=Server=azuresql;Database=BarberShopIdentity;User Id=sa;Password=bigStrongPwd12!;Integrated Security=false;TrustServerCertificate=true
     restart: on-failure
     volumes:
       - ./.aspnet/identity/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
@@ -57,8 +56,8 @@ services:
        - "7291:80"
      env_file: .env 
      environment:
-       - MongoDBSettings__ConnectionURI=${ConnectionStringMongoDB}
-       - MongoDBSettings__DatabaseName=${DatabaseNameMongoDB}
+       - MongoDBSettings__ConnectionURI=mongodb+srv://barbershop:mybarbershop12@barbershop.al7hh3e.mongodb.net/?retryWrites=true&w=majority
+       - MongoDBSettings__DatabaseName=appointments
      restart: on-failure
      volumes:
        - ./.aspnet/identity/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
