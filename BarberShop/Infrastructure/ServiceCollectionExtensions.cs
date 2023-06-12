@@ -38,7 +38,6 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-
     public static IServiceCollection AddDatabase<TDbContext>(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -92,8 +91,18 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddMessaging(
         this IServiceCollection services,
+        IConfiguration configuration,
         params Type[] consumers)
     {
+
+        var rabbitmqUser = configuration
+            .GetSection(nameof(ApplicationSettings))
+            .GetValue<string>(nameof(ApplicationSettings.RabbitMqUser));
+
+        var rabbitmqPass = configuration
+            .GetSection(nameof(ApplicationSettings))
+            .GetValue<string>(nameof(ApplicationSettings.RabbitMqPass));
+
         services
             .AddMassTransit(mt =>
             {
@@ -103,8 +112,8 @@ public static class ServiceCollectionExtensions
                 {
                     rmq.Host("rabbitmq", host =>
                     {
-                        host.Username("rabbitmq");
-                        host.Password("rabbitmq");
+                        host.Username(rabbitmqUser);
+                        host.Password(rabbitmqPass);
                     });
 
                     consumers.ForEach(consumer => rmq.ReceiveEndpoint(consumer.FullName, endpoint =>

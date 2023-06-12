@@ -21,7 +21,7 @@ namespace BarberShop.Identity
                 .AddRouting(opt => opt.LowercaseUrls = true)
                 .AddTransient<IIdentityService, IdentityService>()
                 .AddTransient<ITokenGeneratorService, TokenGeneratorService>()
-                .AddMessaging();
+                .AddMessaging(builder.Configuration);
 
             var app = builder.Build();
 
