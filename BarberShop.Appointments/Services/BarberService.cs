@@ -38,10 +38,7 @@ public class BarberService : IBarberService
 
     public async Task CreateAsync(NewBarberDto input, string currentUserId)
     {
-        if (UserExists(currentUserId))
-        {
-            throw new InvalidOperationException("Barber already exists");
-        }
+        UserExists(currentUserId);
 
         var newBarber = new Barber
         {
@@ -56,9 +53,17 @@ public class BarberService : IBarberService
         _logger.LogInformation($"Inserting client: {newBarber.ToJson()}");
     }
 
-    public async Task<NewBarberDto> CreateUser(NewBarberDto consumer)
+    public async Task CreateUser(NewBarberDto consumer)
     {
-        throw new NotImplementedException();
+        UserExists(consumer.UserId);
+
+        var barber = new Barber()
+        {
+            Name = consumer.Name,
+            UserId = consumer.UserId
+        };
+
+         await _context._collection.InsertOneAsync(barber);
     }
 
     public async Task DeleteAsync(string userId)
@@ -67,6 +72,14 @@ public class BarberService : IBarberService
 
         _logger.LogInformation($"Deleted barber: {barber.ToJson()}");
     }
-    private bool UserExists(string userId) => _context._collection.Find(user => user.UserId == userId).Any();
 
+    private void UserExists(string userId)
+    {
+       var isExists = _context._collection.Find(user => user.UserId == userId).Any();
+
+       if (isExists)
+       {
+           throw new InvalidOperationException("Barber already exists");
+       }
+    }
 }

@@ -2,9 +2,7 @@
 
 namespace BarberShop.Appointments.Models.Users;
 
-public class NewBarberDto : NewClientDto
+public class NewBarberDto : User
 {
-    //TODO add right props
-
     public IEnumerable<BarberServices> AvailableServices { get; set; }
 }
